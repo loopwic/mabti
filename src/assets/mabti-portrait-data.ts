@@ -1,20 +1,20 @@
 export const mabtiPortraitData = {
-  ASZHCW: '/images/ASZ×C×.png',
-  AGZHCW: '/images/AGZ×C×.png',
-  ASZFCW: '/images/ASZ×W×.png',
-  AGZFCW: '/images/AGZ×W×.png',
-  ASRHCW: '/images/ASR×C×.png',
-  AGRHCW: '/images/AGR×C×.png',
-  ASRFCW: '/images/ASR×W×.png',
-  AGRFCW: '/images/AGR×W×.png',
-  DSZHCW: '/images/DSZ×C×.png',
-  DGZHCW: '/images/DGZ×C×.png',
-  DSZFCW: '/images/DSZ×W×.png',
-  DGZFCW: '/images/DGZ×W×.png',
-  DSRHCW: '/images/DSR×C×.png',
-  DGRHCW: '/images/DGR×C×.png',
-  DSRFCW: '/images/DSR×W×.png',
-  DGRFCW: '/images/DGR×W×.png',
+  ASZHCW: '/images/ASZ×C×.webp',
+  AGZHCW: '/images/AGZ×C×.webp',
+  ASZFCW: '/images/ASZ×W×.webp',
+  AGZFCW: '/images/AGZ×W×.webp',
+  ASRHCW: '/images/ASR×C×.webp',
+  AGRHCW: '/images/AGR×C×.webp',
+  ASRFCW: '/images/ASR×W×.webp',
+  AGRFCW: '/images/AGR×W×.webp',
+  DSZHCW: '/images/DSZ×C×.webp',
+  DGZHCW: '/images/DGZ×C×.webp',
+  DSZFCW: '/images/DSZ×W×.webp',
+  DGZFCW: '/images/DGZ×W×.webp',
+  DSRHCW: '/images/DSR×C×.webp',
+  DGRHCW: '/images/DGR×C×.webp',
+  DSRFCW: '/images/DSR×W×.webp',
+  DGRFCW: '/images/DGR×W×.webp',
 } as const
 
 // Map actual 6-letter DNA codes to the correct images based on your previous mapping
@@ -46,5 +46,5 @@ export function getMabtiImage(typeCode: string): string {
   const team = typeCode[4] // C or W
   
   const key = `${energy}${variance}${instinct}×${team}×`
-  return `/images/${key}.png`
+  return `/images/${key}.webp`
 }
