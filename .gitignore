@@ -1,0 +1,10 @@
+node_modules
+dist
+*.tsbuildinfo
+.DS_Store
+.wrangler
+.playwright-mcp
+tmp
+*.png
+!public/images/*.png
+!src/assets/**/*.png

@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #fff9f0;
+  --color-fg: #1a1a1a;
+  --color-accent-attack: #ff4d00;
+  --color-accent-defense: #00e099;
+  --color-accent-logic: #884dff;
+  --color-accent-risk: #ffcc00;
+}
+
+:root {
+  --bg: #fff9f0;
+  --fg: #1a1a1a;
+  --accent-1: #ff4d00;
+  --accent-2: #00e099;
+  --accent-3: #884dff;
+  --accent-4: #ffcc00;
+  --border-thick: 4px;
+  --border-thin: 2px;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+  line-height: 1.2;
+}
+
+h1, h2, h3, h4, .font-archivo {
+  font-family: 'Archivo Black', sans-serif;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.brutal-shadow {
+  box-shadow: 8px 8px 0px var(--fg);
+}
+
+.brutal-shadow-sm {
+  box-shadow: 4px 4px 0px var(--fg);
+}
+
+.brutal-shadow-hover:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0px var(--fg);
+}
+
+.brutal-shadow-active:active {
+  transform: translate(4px, 4px) !important;
+  box-shadow: 0px 0px 0px var(--fg) !important;
+}
+
+.text-stroke-bg {
+  -webkit-text-stroke: 1px var(--bg);
+}
+
+.text-stroke-fg {
+  -webkit-text-stroke: 1px var(--fg);
+  color: transparent;
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mabti",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-04-12",
+  "find_additional_modules": true,
+  "base_dir": ".",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
