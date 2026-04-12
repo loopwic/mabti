@@ -18,7 +18,7 @@ export default {
     }
 
     if (url.pathname === '/api/share-image') {
-      return handleShareImage(request)
+      return handleShareImage(request, env)
     }
 
     return env.ASSETS.fetch(request)
@@ -56,7 +56,7 @@ async function handleResultApi(request: Request) {
   )
 }
 
-async function handleShareImage(request: Request) {
+async function handleShareImage(request: Request, env: Env) {
   const url = new URL(request.url)
   const seed = getSeed(url)
 
@@ -80,7 +80,10 @@ async function handleShareImage(request: Request) {
   }
 
   const format = url.searchParams.get('format')
-  const image = await renderShareImage(result)
+  const image = await renderShareImage(result, {
+    assetFetcher: env.ASSETS,
+    requestUrl: request.url,
+  })
 
   if (format === 'svg') {
     return new Response(image.svg, {

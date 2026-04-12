@@ -3,7 +3,7 @@
   "name": "mabti",
   "main": "src/worker.ts",
   "compatibility_date": "2026-04-12",
-  "find_additional_modules": true,
+  "find_additional_modules": false,
   "base_dir": ".",
   "assets": {
     "directory": "./dist",
