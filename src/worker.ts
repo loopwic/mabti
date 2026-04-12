@@ -127,11 +127,22 @@ async function proxyShareImage(url: URL, env: Env) {
       accept: 'image/png,image/*;q=0.8,*/*;q=0.5',
     },
   })
-  const headers = new Headers(response.headers)
+  const body = await response.arrayBuffer()
+  const headers = new Headers()
   headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400')
   headers.set('x-mabti-og-upstream', upstreamUrl.origin)
 
-  return new Response(response.body, {
+  const contentType = response.headers.get('content-type')
+  if (contentType) {
+    headers.set('content-type', contentType)
+  }
+
+  const contentDisposition = response.headers.get('content-disposition')
+  if (contentDisposition) {
+    headers.set('content-disposition', contentDisposition)
+  }
+
+  return new Response(body, {
     status: response.status,
     headers,
   })
