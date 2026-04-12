@@ -83,11 +83,7 @@ async function handleShareImage(request: Request, env: Env) {
   const format = url.searchParams.get('format')
 
   if (format !== 'svg' && env.OG_IMAGE_SERVICE_URL) {
-    try {
-      return await proxyShareImage(url, env)
-    } catch (error) {
-      console.error('Falling back to local SVG share card.', error)
-    }
+    return proxyShareImage(url, env)
   }
 
   const image = await renderShareImage(result, {
@@ -131,13 +127,9 @@ async function proxyShareImage(url: URL, env: Env) {
       accept: 'image/png,image/*;q=0.8,*/*;q=0.5',
     },
   })
-
-  if (!response.ok) {
-    throw new Error(`OG image upstream failed with status ${response.status}`)
-  }
-
   const headers = new Headers(response.headers)
   headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400')
+  headers.set('x-mabti-og-upstream', upstreamUrl.origin)
 
   return new Response(response.body, {
     status: response.status,
