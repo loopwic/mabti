@@ -7,6 +7,7 @@ interface AssetFetcher {
 
 interface Env {
   ASSETS: AssetFetcher
+  OG_IMAGE_SERVICE_URL?: string
 }
 
 export default {
@@ -79,6 +80,16 @@ async function handleShareImage(request: Request, env: Env) {
     })
   }
 
+  const format = url.searchParams.get('format')
+
+  if (format !== 'svg' && env.OG_IMAGE_SERVICE_URL) {
+    try {
+      return await proxyShareImage(url, env)
+    } catch (error) {
+      console.error('Falling back to local SVG share card.', error)
+    }
+  }
+
   const image = await renderShareImage(result, {
     assetFetcher: env.ASSETS,
     requestUrl: request.url,
@@ -105,5 +116,31 @@ function json(payload: unknown, status = 200, headers: HeadersInit = {}) {
       'content-type': 'application/json; charset=utf-8',
       ...headers,
     },
+  })
+}
+
+async function proxyShareImage(url: URL, env: Env) {
+  const upstreamUrl = new URL(env.OG_IMAGE_SERVICE_URL!)
+
+  for (const [key, value] of url.searchParams.entries()) {
+    upstreamUrl.searchParams.set(key, value)
+  }
+
+  const response = await fetch(upstreamUrl, {
+    headers: {
+      accept: 'image/png,image/*;q=0.8,*/*;q=0.5',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error(`OG image upstream failed with status ${response.status}`)
+  }
+
+  const headers = new Headers(response.headers)
+  headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400')
+
+  return new Response(response.body, {
+    status: response.status,
+    headers,
   })
 }

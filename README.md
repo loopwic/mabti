@@ -1,13 +1,6 @@
 # MABTI
 
-立直麻将人格测试项目，使用 `React + Vite + TanStack Router` 构建前端，使用 `Cloudflare Workers` 静态资源模式部署。
-
-## 功能
-
-- 首页介绍 `MABTI` 的设计概念，并提供进入测试入口
-- 15 道 MBTI 风格七点量表题目，围绕 5 个立直麻将人格维度
-- 结果页包含麻将人格小人、人格解析、雷达图、趣味人格对比和常见人格测试信息模块
-- 支持将结果区域导出为 PNG 图片
+立直麻将人格测试项目，前端使用 `React + Vite + TanStack Router`，主站部署到 `Cloudflare Workers`。
 
 ## 运行
 
@@ -22,7 +15,7 @@ bun run dev
 bun run build
 ```
 
-## Cloudflare Workers
+## Cloudflare 主站
 
 本项目已包含 `wrangler.jsonc`，构建后可直接部署：
 
@@ -35,3 +28,52 @@ bun run deploy
 ```bash
 bun run cf:dev
 ```
+
+## PNG 分享卡
+
+Cloudflare Workers 免费版不适合在 Worker 内部做 `Satori -> Resvg -> PNG` 转换，因此仓库里额外提供了一个 `vercel-og` 子项目，专门负责生成 PNG 分享卡。
+
+当前架构：
+
+- Cloudflare 主站继续提供页面与 `/api/result`
+- Vercel 子服务生成 PNG
+- Cloudflare 的 `/api/share-image` 代理到 Vercel
+- 如果未配置 Vercel 地址，Cloudflare 会回退到本地 SVG 分享卡
+
+### 1. 部署 `vercel-og`
+
+将仓库里的 `vercel-og` 目录作为一个独立 Vercel 项目部署。
+
+Vercel 项目需要设置环境变量：
+
+- `APP_BASE_URL`
+  值填你的 Cloudflare 站点根地址，例如 `https://mabti.example.com`
+
+本地开发：
+
+```bash
+cd vercel-og
+bun install
+vercel dev
+```
+
+部署后你会得到一个地址，类似：
+
+```text
+https://mabti-og.vercel.app/api/share-image
+```
+
+### 2. 配置 Cloudflare 环境变量
+
+在 Cloudflare Workers/Pages 里添加环境变量：
+
+- `OG_IMAGE_SERVICE_URL`
+  值填上一步的完整 Vercel PNG 接口地址
+
+例如：
+
+```text
+OG_IMAGE_SERVICE_URL=https://mabti-og.vercel.app/api/share-image
+```
+
+配置完成后重新部署 Cloudflare 主站。

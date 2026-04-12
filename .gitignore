@@ -5,6 +5,7 @@ dist
 .wrangler
 .playwright-mcp
 tmp
+vercel-og
 *.png
 !public/images/*.png
 !src/assets/**/*.png

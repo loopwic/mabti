@@ -32,7 +32,7 @@ export function ResultPage() {
           // Attempt to fetch the image and share it as a file
           const response = await fetch(imageUrl);
           const blob = await response.blob();
-          const file = new File([blob], `Mabti_DNA_${result.typeCode}.svg`, { type: blob.type });
+          const file = new File([blob], `Mabti_DNA_${result.typeCode}.png`, { type: blob.type });
 
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             await navigator.share({
@@ -65,7 +65,7 @@ export function ResultPage() {
   const handleDownloadImage = () => {
     const link = document.createElement('a')
     link.href = imageUrl
-    link.download = `Mabti_DNA_${result.typeCode}.svg`
+    link.download = `Mabti_DNA_${result.typeCode}.png`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)

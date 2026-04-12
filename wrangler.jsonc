@@ -4,6 +4,8 @@
   "main": "src/worker.ts",
   "compatibility_date": "2026-04-12",
   "find_additional_modules": false,
+  // Configure this in Cloudflare Workers/Pages environment variables after deploying `vercel-og`.
+  // Example: https://your-og-service.vercel.app/api/share-image
   "base_dir": ".",
   "assets": {
     "directory": "./dist",
