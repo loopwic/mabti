@@ -79,28 +79,16 @@ async function handleShareImage(request: Request, env: Env) {
     })
   }
 
-  const format = url.searchParams.get('format')
   const image = await renderShareImage(result, {
     assetFetcher: env.ASSETS,
     requestUrl: request.url,
   })
 
-  if (format === 'svg') {
-    return new Response(image.svg, {
-      headers: {
-        'content-type': 'image/svg+xml; charset=utf-8',
-        'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-      },
-    })
-  }
-
-  const pngBody = Uint8Array.from(image.png)
-
-  return new Response(pngBody, {
+  return new Response(image.svg, {
     headers: {
-      'content-type': 'image/png',
+      'content-type': 'image/svg+xml; charset=utf-8',
       'Cache-Control': 'public, max-age=3600, s-maxage=86400',
-      'Content-Disposition': `inline; filename="mabti-${result.typeCode.toLowerCase()}.png"`,
+      'Content-Disposition': `inline; filename="mabti-${result.typeCode.toLowerCase()}.svg"`,
     },
   })
 }

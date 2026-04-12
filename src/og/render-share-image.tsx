@@ -1,4 +1,3 @@
-import { Resvg, initWasm as initResvg } from '@resvg/resvg-wasm'
 import satori, { init as initSatori } from 'satori/standalone'
 import type { MabtiResult } from '../state/mabti'
 import { ShareCard } from './share-card'
@@ -10,10 +9,7 @@ const SHARE_FONT_ASSETS = {
   400: '/og/noto-sans-sc-400.woff',
   700: '/og/noto-sans-sc-700.woff',
 } as const
-const SHARE_WASM_ASSETS = {
-  resvg: '/og/resvg.wasm',
-  yoga: '/og/yoga.wasm',
-} as const
+const SHARE_YOGA_WASM_ASSET = '/og/yoga.wasm'
 
 let rendererInitPromise: Promise<void> | undefined
 const binaryAssetCache = new Map<string, Promise<ArrayBuffer>>()
@@ -53,27 +49,16 @@ export async function renderShareImage(result: MabtiResult, options: RenderShare
     ],
   })
 
-  const resvg = new Resvg(svg, {
-    background: '#f5eee2',
-    fitTo: {
-      mode: 'width',
-      value: SHARE_IMAGE_WIDTH,
-    },
-  })
-
-  const rendered = resvg.render()
   return {
-    png: rendered.asPng(),
     svg,
   }
 }
 
 async function ensureRenderersReady(options: RenderShareImageOptions) {
   if (!rendererInitPromise) {
-    rendererInitPromise = Promise.all([
-      getBinaryAsset(options, SHARE_WASM_ASSETS.yoga).then((wasm) => initSatori(wasm)),
-      getBinaryAsset(options, SHARE_WASM_ASSETS.resvg).then((wasm) => initResvg(wasm)),
-    ]).then(() => undefined)
+    rendererInitPromise = getBinaryAsset(options, SHARE_YOGA_WASM_ASSET)
+      .then((wasm) => initSatori(wasm))
+      .then(() => undefined)
   }
 
   return rendererInitPromise
