@@ -18,46 +18,47 @@ export function RootLayout() {
   })
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--bg)] font-sans">
+    <div className="min-h-screen flex flex-col bg-[var(--bg)] font-sans selection:bg-black selection:text-white">
       <motion.header 
         variants={{
           visible: { y: 0 },
           hidden: { y: "-100%" },
         }}
         animate={hidden ? "hidden" : "visible"}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 z-50 border-b-[4px] border-black bg-white pointer-events-auto"
+        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+        className="fixed top-0 left-0 right-0 z-50 border-b-[6px] border-black bg-white"
       >
-        <div className="max-w-[1400px] mx-auto flex h-20 items-center justify-between px-4 sm:px-8">
-          <Link to="/" className="flex items-center gap-3 hover:-translate-y-1 transition-transform">
-            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center bg-black text-white font-black text-xl sm:text-2xl brutal-shadow-sm">麻</div>
-            <span className="text-2xl sm:text-3xl font-archivo uppercase tracking-tighter hidden sm:block">Mabti!</span>
+        <div className="max-w-[1400px] mx-auto flex h-24 items-center justify-between px-4 sm:px-8">
+          <Link to="/" className="flex items-center gap-4 group">
+            <div className="flex h-12 w-12 items-center justify-center bg-black text-white font-black text-2xl brutal-shadow-sm group-hover:-rotate-12 transition-transform">麻</div>
+            <span className="text-3xl sm:text-4xl font-archivo uppercase tracking-tighter hidden sm:block">Mabti<span className="text-[var(--accent-1)]">!</span></span>
           </Link>
-          <nav className="flex gap-3 sm:gap-6 font-black uppercase text-sm sm:text-base">
-            <Link to="/test" className="px-4 py-2 border-[2px] border-black brutal-shadow-sm hover:-translate-y-1 hover:bg-[var(--accent-4)] transition-all" activeProps={{ className: 'bg-[var(--accent-4)]' }}>Play</Link>
-            <Link to="/result" search={{ seed: undefined }} className="px-4 py-2 border-[2px] border-black brutal-shadow-sm hover:-translate-y-1 hover:bg-[var(--accent-4)] transition-all" activeProps={{ className: 'bg-[var(--accent-4)]' }}>Result</Link>
+          <nav className="flex gap-4 sm:gap-10 font-black uppercase text-sm sm:text-lg tracking-tighter">
+            <Link to="/test" className="hover:text-[var(--accent-1)] transition-colors" activeProps={{ className: 'text-[var(--accent-1)]' }}>Play</Link>
+            <Link to="/result" search={{ seed: undefined }} className="hover:text-[var(--accent-1)] transition-colors" activeProps={{ className: 'text-[var(--accent-1)]' }}>Dossier</Link>
           </nav>
         </div>
       </motion.header>
       
-      {/* pt-20 accounts for the fixed navbar height so content doesn't jump */}
-      <div className="flex-1 flex flex-col pt-20">
+      <div className="flex-1 flex flex-col pt-24">
         <AnimatePresence mode="wait">
           <Outlet />
         </AnimatePresence>
       </div>
 
-      <footer className="mt-auto border-t-[4px] border-black bg-black text-white py-16 sm:py-20">
+      <footer className="mt-40 border-t-[12px] border-black bg-black text-white py-24 sm:py-32">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8">
-          <div className="flex flex-col md:flex-row justify-between gap-12">
-            <div>
-              <h2 className="text-4xl sm:text-5xl font-archivo italic">MABTI.</h2>
-              <p className="mt-4 opacity-60 max-w-sm font-bold">The boldest Mahjong personality analyzer. Find your true table DNA.</p>
+          <div className="flex flex-col lg:flex-row justify-between gap-20">
+            <div className="flex-1">
+              <h2 className="text-6xl sm:text-9xl font-archivo italic mb-8">MABTI.</h2>
+              <p className="text-xl sm:text-2xl font-bold opacity-40 max-w-xl leading-tight">
+                THE BOLD TACTICAL DNA ANALYZER FOR THE RIICHI MAHJONG ELITE. NO COMPROMISE. NO MERCY.
+              </p>
             </div>
-            <div className="flex flex-col gap-2 font-black uppercase tracking-widest text-sm sm:text-base">
-              <span className="text-[var(--accent-4)]">Built for the Serious</span>
-              <span>No Mercy at the Table</span>
-              <span className="opacity-40 mt-4">© 2026 MABTI PROJECT</span>
+            <div className="flex flex-col justify-end gap-4 font-black uppercase tracking-[0.2em] text-sm sm:text-xl">
+              <span className="text-[var(--accent-4)]">Tactical Intelligence v2.0</span>
+              <span className="text-[var(--accent-2)]">Verified Authentication</span>
+              <span className="opacity-20 mt-8">© 2026 MABTI STRATEGIC LAB</span>
             </div>
           </div>
         </div>
