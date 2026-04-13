@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { motion, AnimatePresence, useAnimation } from 'motion/react'
-import { ArrowLeft, Target, Zap, ShieldCheck } from 'lucide-react'
+import { motion, AnimatePresence, useAnimation, useReducedMotion } from 'motion/react'
+import { ArrowLeft } from 'lucide-react'
 import {
   answersToResult,
   axisDefinitions,
@@ -18,8 +18,20 @@ import {
 import { BrutalButton } from '../components/BrutalUI'
 import { MabtiAvatar } from '../ui/mabti-avatar'
 
+type QuestionOption = NonNullable<Question['options']>[number]
+
+const SURFACE_COLOR = '#fff9f0'
+const INK_COLOR = '#1a1a1a'
+
+function getOptionTransition(reducedMotion: boolean) {
+  return reducedMotion
+    ? { duration: 0.12 }
+    : { type: 'spring' as const, stiffness: 360, damping: 24, mass: 0.75 }
+}
+
 export function TestPage() {
   const navigate = useNavigate()
+  const reducedMotion = useReducedMotion() ?? false
   const [answers, setAnswers] = useState<AnswerMap>(() => createBlankAnswers())
   const [answeredFlags, setAnsweredFlags] = useState<Record<string, boolean>>({})
   const [currentGroupIndex, setCurrentGroupIndex] = useState(0)
@@ -42,15 +54,15 @@ export function TestPage() {
   const progress = Math.round((answeredCount / questions.length) * 100)
   
   useEffect(() => {
-    if (answeredCount > 0) {
+    if (!reducedMotion && answeredCount > 0) {
       void companionControls.start({
-        y: [0, -40, 0],
-        scale: [1, 1.15, 1],
-        rotate: [0, 15, 0],
-        transition: { duration: 0.5, type: "spring", bounce: 0.6 }
+        y: [0, -24, 0],
+        scale: [1, 1.06, 1],
+        rotate: [0, 6, 0],
+        transition: { type: 'spring', stiffness: 260, damping: 18, mass: 0.7 }
       })
     }
-  }, [answeredCount, companionControls])
+  }, [answeredCount, companionControls, reducedMotion])
 
   const selectAnswer = (id: string, val: number) => {
     setAnswers(p => ({ ...p, [id]: val }))
@@ -63,7 +75,7 @@ export function TestPage() {
       if (othersAnswered) {
         setTimeout(() => {
           setCurrentGroupIndex(p => Math.min(questionGroups.length - 1, p + 1))
-          window.scrollTo({ top: 0, behavior: 'smooth' })
+          window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
         }, 600)
       }
     }
@@ -71,12 +83,12 @@ export function TestPage() {
 
   const goNext = () => {
     setCurrentGroupIndex(p => Math.min(questionGroups.length - 1, p + 1))
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
   }
   
   const goPrev = () => {
     setCurrentGroupIndex(p => Math.max(0, p - 1))
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' })
   }
 
   const finish = () => {
@@ -131,7 +143,7 @@ export function TestPage() {
               className="h-full bg-black" 
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }} 
-              transition={{ ease: "easeOut", duration: 0.5 }}
+              transition={reducedMotion ? { duration: 0.01 } : { ease: 'easeOut', duration: 0.5 }}
             />
           </div>
         </div>
@@ -170,7 +182,7 @@ export function TestPage() {
                         <div className="text-[10px] font-black uppercase opacity-30 tracking-[0.2em]">{axis.label}</div>
                       </div>
                       
-                      <h3 className="text-3xl sm:text-5xl font-black leading-[1.1] mb-12 max-w-4xl">
+                      <h3 className="text-3xl sm:text-5xl font-black leading-[1.24] sm:leading-[1.18] mb-12 max-w-4xl">
                         {q.prompt}
                       </h3>
                       
@@ -185,6 +197,7 @@ export function TestPage() {
                               color={q.direction === 1 ? axis.right.color : axis.left.color}
                               letter={q.direction === 1 ? axis.right.letter : axis.left.letter}
                               onClick={() => selectAnswer(q.id, 3)}
+                              reducedMotion={reducedMotion}
                             />
                             <BinaryButton 
                               label="NO WAY" 
@@ -193,6 +206,7 @@ export function TestPage() {
                               color={q.direction === -1 ? axis.right.color : axis.left.color}
                               letter={q.direction === -1 ? axis.right.letter : axis.left.letter}
                               onClick={() => selectAnswer(q.id, -3)}
+                              reducedMotion={reducedMotion}
                               dark
                             />
                           </div>
@@ -206,13 +220,14 @@ export function TestPage() {
                                 color={(opt.value * q.direction) > 0 ? axis.right.color : axis.left.color}
                                 letter={(opt.value * q.direction) > 0 ? axis.right.letter : axis.left.letter}
                                 onClick={() => selectAnswer(q.id, opt.value)}
+                                reducedMotion={reducedMotion}
                               />
                             ))}
                           </div>
                         ) : (
                           <div className="flex flex-col md:flex-row items-center gap-8">
                              <motion.div 
-                                animate={{ x: leftActive ? -5 : 0, opacity: leftActive ? 1 : 0.4 }}
+                                animate={reducedMotion ? { opacity: leftActive ? 1 : 0.4 } : { x: leftActive ? -5 : 0, opacity: leftActive ? 1 : 0.4 }}
                                 className="hidden md:block w-40 text-center font-black uppercase text-xs tracking-widest"
                              >
                                 绝不认同
@@ -229,8 +244,8 @@ export function TestPage() {
                                   return (
                                     <div key={opt.value} className="relative flex-1 flex justify-center items-center h-16">
                                       <motion.button
-                                        whileHover={{ scale: 1.2, y: -4 }}
-                                        whileTap={{ scale: 0.9 }}
+                                        whileHover={reducedMotion ? undefined : { scale: 1.14, y: -3 }}
+                                        whileTap={reducedMotion ? undefined : { scale: 0.94 }}
                                         onClick={() => selectAnswer(q.id, opt.value)}
                                         animate={{ 
                                           width: isSelected ? 56 : 24, 
@@ -239,7 +254,7 @@ export function TestPage() {
                                           borderColor: isSelected ? color : '#000',
                                           rotate: isSelected && opt.value !== 0 ? 45 : 0
                                         }}
-                                        transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                                        transition={getOptionTransition(reducedMotion)}
                                         className="relative z-10 border-[3px] cursor-pointer flex items-center justify-center overflow-hidden"
                                         style={{ borderRadius: opt.value === 0 ? '50%' : '0' }}
                                       >
@@ -249,6 +264,7 @@ export function TestPage() {
                                               initial={{ opacity: 0, scale: 0, rotate: -45 }}
                                               animate={{ opacity: 1, scale: 1, rotate: opt.value !== 0 ? -45 : 0 }}
                                               exit={{ opacity: 0, scale: 0 }}
+                                              transition={getOptionTransition(reducedMotion)}
                                               className="text-white font-black text-2xl flex items-center justify-center"
                                             >
                                               {opt.value === 0 ? '●' : opt.value < 0 ? '←' : '→'}
@@ -271,7 +287,7 @@ export function TestPage() {
                              </div>
 
                              <motion.div 
-                                animate={{ x: rightActive ? 5 : 0, opacity: rightActive ? 1 : 0.4 }}
+                                animate={reducedMotion ? { opacity: rightActive ? 1 : 0.4 } : { x: rightActive ? 5 : 0, opacity: rightActive ? 1 : 0.4 }}
                                 className="hidden md:block w-40 text-center font-black uppercase text-xs tracking-widest"
                              >
                                 绝对认同
@@ -308,38 +324,181 @@ export function TestPage() {
   )
 }
 
-function BinaryButton({ label, sub, active, color, letter, onClick, dark = false }: any) {
+interface BinaryButtonProps {
+  label: string
+  sub: string
+  active: boolean
+  color: string
+  letter: string
+  onClick: () => void
+  reducedMotion: boolean
+  dark?: boolean
+}
+
+function BinaryButton({ label, sub, active, color, letter, onClick, reducedMotion, dark = false }: BinaryButtonProps) {
+  const transition = getOptionTransition(reducedMotion)
+
   return (
     <motion.button 
-      whileHover={{ y: -8 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={reducedMotion ? undefined : { y: -6, scale: 1.015 }}
+      whileTap={reducedMotion ? undefined : { y: -2, scale: 0.975 }}
+      animate={{
+        backgroundColor: active ? color : dark ? INK_COLOR : SURFACE_COLOR,
+        color: active || dark ? SURFACE_COLOR : INK_COLOR,
+        y: active && !reducedMotion ? -4 : 0,
+      }}
+      transition={transition}
       onClick={onClick}
-      className={`flex-1 relative border-[6px] border-black p-10 brutal-shadow overflow-hidden text-left flex flex-col justify-between min-h-[200px] transition-colors ${dark && !active ? 'bg-black text-white' : 'bg-white text-black'}`}
-      style={active ? { backgroundColor: color, color: 'white' } : {}}
+      className="group flex-1 relative border-[6px] border-black p-10 brutal-shadow overflow-hidden text-left flex flex-col justify-between min-h-[200px]"
     >
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        animate={{ opacity: active ? 0.12 : 0 }}
+        transition={transition}
+        style={{ backgroundColor: color }}
+      />
+      <motion.div
+        className="absolute left-10 right-10 top-8 h-[3px] bg-current pointer-events-none"
+        animate={{ opacity: active ? 0.24 : dark ? 0.3 : 0.14, scaleX: active ? 1 : 0.55 }}
+        transition={transition}
+        style={{ originX: 0 }}
+      />
+
+      <SelectionGlow active={active} color={color} reducedMotion={reducedMotion} />
       <div className="relative z-10">
-        <div className="text-4xl font-archivo leading-none mb-2">{label}</div>
-        <div className="text-sm font-black opacity-60 uppercase tracking-widest">{sub}</div>
+        <motion.div
+          animate={{ opacity: active ? 1 : 0.92 }}
+          transition={transition}
+          className="text-4xl font-archivo leading-none mb-2"
+        >
+          {label}
+        </motion.div>
+        <motion.div
+          animate={{ opacity: active ? 0.82 : 0.62 }}
+          transition={transition}
+          className="text-sm font-black uppercase tracking-widest"
+        >
+          {sub}
+        </motion.div>
       </div>
-      {active && <div className="absolute -right-8 -bottom-8 text-[160px] font-archivo opacity-20 pointer-events-none">{letter}</div>}
+
+      <motion.div
+        className="relative z-10 text-xs font-black uppercase tracking-[0.28em]"
+        animate={{ opacity: active ? 0.8 : 0.38, y: active && !reducedMotion ? -2 : 0 }}
+        transition={transition}
+      >
+        Tap To Lock In
+      </motion.div>
+
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            initial={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8, x: 18, y: 18 }}
+            animate={reducedMotion ? { opacity: 0.18 } : { opacity: 0.18, scale: 1, x: 0, y: 0 }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88, x: 12, y: 12 }}
+            transition={transition}
+            className="absolute -right-8 -bottom-8 text-[160px] font-archivo pointer-events-none"
+          >
+            {letter}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.button>
   )
 }
 
-function ABCDButton({ opt, active, color, letter, onClick }: any) {
+interface ABCDButtonProps {
+  opt: QuestionOption
+  active: boolean
+  color: string
+  letter: string
+  onClick: () => void
+  reducedMotion: boolean
+}
+
+function ABCDButton({ opt, active, color, letter, onClick, reducedMotion }: ABCDButtonProps) {
+  const transition = getOptionTransition(reducedMotion)
+
   return (
     <motion.button
-      whileHover={{ y: -6 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={reducedMotion ? undefined : { y: -5, scale: 1.01 }}
+      whileTap={reducedMotion ? undefined : { y: -2, scale: 0.98 }}
+      animate={{
+        backgroundColor: active ? color : SURFACE_COLOR,
+        color: active ? SURFACE_COLOR : INK_COLOR,
+        y: active && !reducedMotion ? -3 : 0,
+      }}
+      transition={transition}
       onClick={onClick}
-      className="relative border-[4px] border-black p-8 brutal-shadow overflow-hidden text-left min-h-[160px] flex items-center bg-white transition-colors"
-      style={active ? { backgroundColor: color, color: 'white' } : {}}
+      className="group relative border-[4px] border-black p-8 brutal-shadow overflow-hidden text-left min-h-[160px] flex items-center"
     >
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        animate={{ opacity: active ? 0.12 : 0 }}
+        transition={transition}
+        style={{ backgroundColor: color }}
+      />
+      <motion.div
+        className="absolute left-8 right-8 top-6 h-[2px] bg-current pointer-events-none"
+        animate={{ opacity: active ? 0.22 : 0.12, scaleX: active ? 1 : 0.48 }}
+        transition={transition}
+        style={{ originX: 0 }}
+      />
+
+      <SelectionGlow active={active} color={color} reducedMotion={reducedMotion} />
       <div className="flex gap-8 items-center relative z-10 w-full">
-        <div className="font-archivo text-6xl opacity-10 leading-none">{opt.label}</div>
-        <div className="flex-1 font-black text-xl leading-tight">{opt.text}</div>
+        <motion.div
+          animate={{ opacity: active ? 0.28 : 0.12, scale: active ? 1.08 : 1 }}
+          transition={transition}
+          className="font-archivo text-6xl leading-none"
+        >
+          {opt.label}
+        </motion.div>
+        <motion.div
+          animate={{ opacity: active ? 1 : 0.94 }}
+          transition={transition}
+          className="flex-1 font-black text-xl leading-[1.45]"
+        >
+          {opt.text}
+        </motion.div>
       </div>
-      {active && <div className="absolute -right-4 -bottom-4 text-[120px] font-archivo opacity-20 pointer-events-none">{letter}</div>}
+
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            initial={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8, x: 18, y: 18 }}
+            animate={reducedMotion ? { opacity: 0.18 } : { opacity: 0.18, scale: 1, x: 0, y: 0 }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, x: 10, y: 10 }}
+            transition={transition}
+            className="absolute -right-4 -bottom-4 text-[120px] font-archivo pointer-events-none"
+          >
+            {letter}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.button>
+  )
+}
+
+interface SelectionGlowProps {
+  active: boolean
+  color: string
+  reducedMotion: boolean
+}
+
+function SelectionGlow({ active, color, reducedMotion }: SelectionGlowProps) {
+  return (
+    <AnimatePresence>
+      {active && (
+        <motion.div
+          initial={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
+          animate={reducedMotion ? { opacity: 0.1 } : { opacity: 0.14, scale: 1 }}
+          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9 }}
+          transition={getOptionTransition(reducedMotion)}
+          className="absolute inset-6 rounded-[24px] blur-2xl pointer-events-none"
+          style={{ backgroundColor: color }}
+        />
+      )}
+    </AnimatePresence>
   )
 }
