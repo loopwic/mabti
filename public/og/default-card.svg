@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="MABTI 默认分享图">
+  <rect width="1200" height="630" fill="#fff9f0" />
+  <rect x="30" y="30" width="1140" height="570" fill="#fff9f0" stroke="#1a1a1a" stroke-width="12" />
+  <rect x="78" y="78" width="320" height="474" fill="#1a1a1a" />
+  <rect x="306" y="106" width="62" height="62" fill="#ff4d00" />
+  <path
+    d="M153 426V174h63.5c18.08 0 32.45 4.98 43.09 14.95 10.65 9.97 15.98 23.12 15.98 39.45 0 9.84-2.08 18.34-6.24 25.51-4.16 7.16-10.36 12.65-18.61 16.46 11.44 3.12 20.18 8.8 26.2 17.06 6.01 8.25 9.02 18.45 9.02 30.6 0 18.2-5.49 32.35-16.46 42.44-10.98 10.1-26.75 15.2-47.32 15.32H153Zm59.55-146.42h18.74c13.64 0 20.45-5.58 20.45-16.75 0-6.93-1.96-11.96-5.89-15.09-3.93-3.12-10.23-4.68-18.91-4.68h-14.39v36.52Zm0 45.54v52.57h24.12c6.58 0 11.74-1.57 15.49-4.71 3.75-3.14 5.63-7.51 5.63-13.12 0-14.29-6.47-21.5-19.41-21.62h-25.83Z"
+    fill="#fff9f0"
+  />
+  <text x="462" y="180" fill="#1a1a1a" font-family="'Arial Black', 'Archivo Black', sans-serif" font-size="138" font-weight="900" letter-spacing="-4">MABTI!</text>
+  <text x="466" y="250" fill="#ff4d00" font-family="'Arial Black', 'Archivo Black', sans-serif" font-size="28" font-weight="900" letter-spacing="6">TACTICAL DNA ANALYZER</text>
+  <text x="466" y="344" fill="#1a1a1a" font-family="'Noto Sans SC', 'PingFang SC', sans-serif" font-size="56" font-weight="700">立直麻将人格测试</text>
+  <text x="466" y="410" fill="#1a1a1a" font-family="'Noto Sans SC', 'PingFang SC', sans-serif" font-size="30" font-weight="400">解析你的攻守倾向、读牌风格、节奏控制与牌桌人格画像。</text>
+  <text x="466" y="462" fill="#1a1a1a" font-family="'Noto Sans SC', 'PingFang SC', sans-serif" font-size="30" font-weight="400">24 道题，生成专属类型代码、角色画像与分享卡。</text>
+  <rect x="466" y="500" width="286" height="62" fill="#ffcc00" stroke="#1a1a1a" stroke-width="6" />
+  <text x="500" y="542" fill="#1a1a1a" font-family="'Arial Black', 'Archivo Black', sans-serif" font-size="26" font-weight="900" letter-spacing="2">REVEAL YOUR DNA</text>
+</svg>

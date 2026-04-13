@@ -8,4 +8,7 @@ tmp
 vercel-og
 *.png
 !public/images/*.png
+!public/apple-touch-icon.png
+!public/favicon-192.png
+!public/favicon-512.png
 !src/assets/**/*.png
