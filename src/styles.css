@@ -18,13 +18,38 @@
   --accent-4: #ffcc00;
   --border-thick: 4px;
   --border-thin: 2px;
+  --page-max: 1400px;
+  --page-max-narrow: 1240px;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 3rem;
+  --shadow-lg: 8px 8px 0px var(--fg);
+  --shadow-sm: 4px 4px 0px var(--fg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
+  min-height: 100vh;
   background-color: var(--bg);
   color: var(--fg);
   font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
-  line-height: 1.2;
+  line-height: 1.35;
+  text-rendering: optimizeLegibility;
 }
 
 h1, h2, h3, h4, .font-archivo {
@@ -34,12 +59,37 @@ h1, h2, h3, h4, .font-archivo {
   letter-spacing: -0.02em;
 }
 
+#root {
+  min-height: 100vh;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  max-width: 68ch;
+}
+
 .brutal-shadow {
-  box-shadow: 8px 8px 0px var(--fg);
+  box-shadow: var(--shadow-lg);
 }
 
 .brutal-shadow-sm {
-  box-shadow: 4px 4px 0px var(--fg);
+  box-shadow: var(--shadow-sm);
 }
 
 .brutal-shadow-hover:hover {
@@ -59,4 +109,57 @@ h1, h2, h3, h4, .font-archivo {
 .text-stroke-fg {
   -webkit-text-stroke: 1px var(--fg);
   color: transparent;
+}
+
+.page-shell {
+  width: min(100%, var(--page-max));
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2.6vw, 2rem);
+}
+
+.page-shell-narrow {
+  width: min(100%, var(--page-max-narrow));
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 2.6vw, 2rem);
+}
+
+.section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3rem, 7vw, 7rem);
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.fluid-display {
+  font-size: clamp(4.5rem, 16vw, 11rem);
+  line-height: 0.78;
+}
+
+.fluid-title {
+  font-size: clamp(2.75rem, 8vw, 5.75rem);
+  line-height: 0.84;
+}
+
+.fluid-subtitle {
+  font-size: clamp(1.25rem, 3.5vw, 2.25rem);
+  line-height: 1.14;
+}
+
+.quote-card {
+  border: 4px solid var(--fg);
+  background: color-mix(in srgb, white 82%, var(--bg));
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+@media (max-width: 640px) {
+  :root {
+    --shadow-lg: 5px 5px 0px var(--fg);
+    --shadow-sm: 3px 3px 0px var(--fg);
+  }
 }

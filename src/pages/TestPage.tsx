@@ -102,7 +102,7 @@ export function TestPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="max-w-[1200px] mx-auto px-4 sm:px-8 py-12 sm:py-24 relative"
+      className="page-shell-narrow relative py-10 sm:py-16 lg:py-20"
     >
       {/* Companion */}
       <div className="fixed bottom-8 right-8 z-40 hidden lg:flex pointer-events-none items-end">
@@ -125,15 +125,15 @@ export function TestPage() {
       </div>
 
       {/* Header Area */}
-      <div className="mb-20 border-b-[8px] border-black pb-10 flex flex-col md:flex-row justify-between items-end gap-8">
-        <div>
+      <div className="mb-12 grid gap-6 border-b-[6px] border-black pb-8 sm:mb-16 sm:border-b-[8px] sm:pb-10 lg:mb-20 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
+        <div className="min-w-0">
           <div className="flex gap-3 items-center mb-4">
             <span className="bg-[var(--accent-1)] text-white px-3 py-1 font-black text-xs uppercase tracking-widest">Stage 0{currentGroupIndex + 1}</span>
             <span className="font-black text-xs uppercase tracking-widest opacity-40">Tactical Scan in Progress</span>
           </div>
-          <h1 className="text-6xl sm:text-8xl font-archivo leading-[0.85] uppercase tracking-tighter">{currentGroup.title}</h1>
+          <h1 className="fluid-title font-archivo uppercase tracking-tighter">{currentGroup.title}</h1>
         </div>
-        <div className="w-full md:w-72 shrink-0">
+        <div className="w-full max-w-sm shrink-0 lg:justify-self-end">
           <div className="flex justify-between font-black uppercase text-[10px] tracking-widest mb-2">
             <span>Sequencing DNA</span>
             <span>{progress}%</span>
@@ -150,7 +150,7 @@ export function TestPage() {
       </div>
 
       {/* Questions */}
-      <div className="space-y-0 mb-32">
+      <div className="mb-20 space-y-0 sm:mb-24 lg:mb-28">
         <AnimatePresence mode="popLayout">
           <motion.div 
             key={currentGroupIndex}
@@ -167,8 +167,8 @@ export function TestPage() {
               const rightActive = isActive && typeof currentVal === 'number' && currentVal > 0
               
               return (
-                <div key={q.id} className="py-20 border-b-[4px] border-black/10 last:border-b-0 group">
-                  <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
+                <div key={q.id} className="group border-b-[4px] border-black/10 py-12 last:border-b-0 sm:py-16 lg:py-20">
+                  <div className="flex flex-col items-start gap-8 lg:flex-row lg:gap-16">
                     <div className="hidden lg:block relative shrink-0 w-[140px] h-[120px]">
                       <div className="text-[120px] font-archivo opacity-[0.03] leading-none select-none">
                         {(currentGroupIndex * 4 + i + 1).toString().padStart(2, '0')}
@@ -176,20 +176,23 @@ export function TestPage() {
                     </div>
                     
                     <div className="flex-1 w-full">
-                      <div className="flex gap-4 items-center mb-8">
+                      <div className="mb-6 flex flex-wrap items-center gap-4 sm:mb-8">
+                        <div className="font-archivo text-3xl leading-none opacity-[0.08] lg:hidden">
+                          {(currentGroupIndex * 4 + i + 1).toString().padStart(2, '0')}
+                        </div>
                         <div className="bg-black text-white px-3 py-1 font-black text-[10px] uppercase tracking-[0.2em]">{q.tag}</div>
                         <div className="h-[2px] w-8 bg-black/10"></div>
                         <div className="text-[10px] font-black uppercase opacity-30 tracking-[0.2em]">{axis.label}</div>
                       </div>
                       
-                      <h3 className="text-3xl sm:text-5xl font-black leading-[1.24] sm:leading-[1.18] mb-12 max-w-4xl">
+                      <h3 className="mb-8 max-w-4xl text-2xl font-black leading-[1.28] sm:mb-10 sm:text-4xl sm:leading-[1.18] lg:text-5xl">
                         {q.prompt}
                       </h3>
                       
                       {/* Interaction Area */}
                       <div className="w-full">
                         {q.type === 'binary' ? (
-                          <div className="flex flex-col sm:flex-row gap-6">
+                          <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
                             <BinaryButton 
                               label="THAT'S ME" 
                               sub="绝对如此" 
@@ -211,7 +214,7 @@ export function TestPage() {
                             />
                           </div>
                         ) : q.type === 'abcd' ? (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
                             {q.options?.map(opt => (
                               <ABCDButton 
                                 key={opt.label}
@@ -225,7 +228,11 @@ export function TestPage() {
                             ))}
                           </div>
                         ) : (
-                          <div className="flex flex-col md:flex-row items-center gap-8">
+                          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
+                             <div className="flex justify-between text-[10px] font-black uppercase tracking-[0.2em] opacity-45 md:hidden">
+                                <span>绝不认同</span>
+                                <span>绝对认同</span>
+                             </div>
                              <motion.div 
                                 animate={reducedMotion ? { opacity: leftActive ? 1 : 0.4 } : { x: leftActive ? -5 : 0, opacity: leftActive ? 1 : 0.4 }}
                                 className="hidden md:block w-40 text-center font-black uppercase text-xs tracking-widest"
@@ -233,8 +240,8 @@ export function TestPage() {
                                 绝不认同
                              </motion.div>
                              
-                             <div className="flex-1 flex justify-between items-center gap-2 sm:gap-4 w-full relative py-12 px-6 border-[4px] border-black bg-white brutal-shadow-sm overflow-visible">
-                                <div className="absolute top-1/2 left-10 right-10 h-[2px] bg-black/10 -translate-y-1/2"></div>
+                             <div className="relative flex w-full flex-1 items-center justify-between gap-2 overflow-visible border-[4px] border-black bg-white px-4 py-8 brutal-shadow-sm sm:gap-4 sm:px-6 sm:py-12">
+                                <div className="absolute top-1/2 left-6 right-6 h-[2px] bg-black/10 -translate-y-1/2 sm:left-10 sm:right-10"></div>
                                 
                                 {scaleOptions.map(opt => {
                                   const isSelected = isActive && currentVal === opt.value
@@ -242,7 +249,7 @@ export function TestPage() {
                                   const color = opt.value === 0 ? '#000' : isRight ? axis.right.color : axis.left.color
                                   
                                   return (
-                                    <div key={opt.value} className="relative flex-1 flex justify-center items-center h-16">
+                                    <div key={opt.value} className="relative flex h-14 flex-1 items-center justify-center sm:h-16">
                                       <motion.button
                                         whileHover={reducedMotion ? undefined : { scale: 1.14, y: -3 }}
                                         whileTap={reducedMotion ? undefined : { scale: 0.94 }}
@@ -273,14 +280,6 @@ export function TestPage() {
                                         </AnimatePresence>
                                       </motion.button>
                                       
-                                      {/* Selection Indicator Glow */}
-                                      {isSelected && (
-                                        <motion.div 
-                                          layoutId={`glow-${q.id}`}
-                                          className="absolute inset-0 bg-current opacity-10 rounded-full blur-xl pointer-events-none"
-                                          style={{ color }}
-                                        />
-                                      )}
                                     </div>
                                   )
                                 })}
@@ -305,11 +304,11 @@ export function TestPage() {
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between items-center border-t-[8px] border-black pt-12">
+      <div className="flex flex-col gap-4 border-t-[6px] border-black pt-8 sm:flex-row sm:items-center sm:justify-between sm:pt-12 sm:border-t-[8px]">
         <BrutalButton bgColor="bg-white" disabled={currentGroupIndex === 0} onClick={goPrev}>
           <ArrowLeft size={24} className="mr-2" /> PREV
         </BrutalButton>
-        <div className="text-xs font-black uppercase opacity-40 hidden sm:block">Tactical Analysis Section 0{currentGroupIndex + 1}</div>
+        <div className="hidden text-xs font-black uppercase opacity-40 sm:block">Tactical Analysis Section 0{currentGroupIndex + 1}</div>
         {currentGroupIndex === questionGroups.length - 1 ? (
           <BrutalButton bgColor="bg-[var(--accent-4)]" disabled={answeredCount < questions.length} onClick={finish} showArrow>
             REVEAL DNA
@@ -349,7 +348,7 @@ function BinaryButton({ label, sub, active, color, letter, onClick, reducedMotio
       }}
       transition={transition}
       onClick={onClick}
-      className="group flex-1 relative border-[6px] border-black p-10 brutal-shadow overflow-hidden text-left flex flex-col justify-between min-h-[200px]"
+      className="group relative flex min-h-[180px] flex-1 flex-col justify-between overflow-hidden border-[4px] border-black p-6 text-left brutal-shadow sm:min-h-[200px] sm:border-[6px] sm:p-8 lg:p-10"
     >
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -369,14 +368,14 @@ function BinaryButton({ label, sub, active, color, letter, onClick, reducedMotio
         <motion.div
           animate={{ opacity: active ? 1 : 0.92 }}
           transition={transition}
-          className="text-4xl font-archivo leading-none mb-2"
+          className="mb-2 text-3xl font-archivo leading-none sm:text-4xl"
         >
           {label}
         </motion.div>
         <motion.div
           animate={{ opacity: active ? 0.82 : 0.62 }}
           transition={transition}
-          className="text-sm font-black uppercase tracking-widest"
+          className="text-xs font-black uppercase tracking-widest sm:text-sm"
         >
           {sub}
         </motion.div>
@@ -430,7 +429,7 @@ function ABCDButton({ opt, active, color, letter, onClick, reducedMotion }: ABCD
       }}
       transition={transition}
       onClick={onClick}
-      className="group relative border-[4px] border-black p-8 brutal-shadow overflow-hidden text-left min-h-[160px] flex items-center"
+      className="group relative flex min-h-[152px] items-center overflow-hidden border-[4px] border-black p-6 text-left brutal-shadow sm:min-h-[160px] sm:p-8"
     >
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -446,18 +445,18 @@ function ABCDButton({ opt, active, color, letter, onClick, reducedMotion }: ABCD
       />
 
       <SelectionGlow active={active} color={color} reducedMotion={reducedMotion} />
-      <div className="flex gap-8 items-center relative z-10 w-full">
+      <div className="relative z-10 flex w-full items-center gap-5 sm:gap-8">
         <motion.div
           animate={{ opacity: active ? 0.28 : 0.12, scale: active ? 1.08 : 1 }}
           transition={transition}
-          className="font-archivo text-6xl leading-none"
+          className="font-archivo text-5xl leading-none sm:text-6xl"
         >
           {opt.label}
         </motion.div>
         <motion.div
           animate={{ opacity: active ? 1 : 0.94 }}
           transition={transition}
-          className="flex-1 font-black text-xl leading-[1.45]"
+          className="flex-1 font-black text-lg leading-[1.45] sm:text-xl"
         >
           {opt.text}
         </motion.div>
